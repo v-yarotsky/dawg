@@ -85,7 +85,6 @@ func (s AlfredOutputItems) Less(i, j int) bool {
 type AlfredOutputItem struct {
 	XMLName      xml.Name `xml:"item"`
 	UID          string   `xml:"uid,attr"`
-	Valid        string   `xml:"valid,attr"`
 	Autocomplete string   `xml:"autocomplete,attr"`
 	Title        string   `xml:"title"`
 	Arg          string   `xml:"arg"`
@@ -125,8 +124,7 @@ func main() {
 		}
 		unquotedURL, _ := strconv.Unquote(url)
 		alfredOut.Items = append(alfredOut.Items, AlfredOutputItem{
-			UID:          shortcut,
-			Valid:        "YES",
+			UID:          "dawg:" + shortcut,
 			Autocomplete: shortcut,
 			Title:        shortcut,
 			Arg:          unquotedURL,

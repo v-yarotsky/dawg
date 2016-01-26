@@ -60,6 +60,9 @@ You will get this:
 
 Here's how a simple "script filter + open URL" Alfred workflow looks like:
 
+![Alfred](https://github.com/v-yarotsky/dawg/blob/master/doc/screenshot.png?raw=true)
+![Alfred Workflow Setup](https://github.com/v-yarotsky/dawg/blob/master/doc/workflow.png?raw=true)
+
 ## License
 
 [WTFPL](https://github.com/v-yarotsky/dawg/blob/master/LICENSE.txt?raw=true)
