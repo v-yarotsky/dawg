@@ -5,7 +5,7 @@ Fancy link expander workflow generator for [Alfred](https://www.alfredapp.com/).
 
 ## Usage
 
-Put a json config with URL templates and substitutions to `~/.dawg.json`:
+Make a json config with URL templates and substitutions:
 
     {
       "www.datadoghq.com": {
@@ -28,7 +28,7 @@ Put a json config with URL templates and substitutions to `~/.dawg.json`:
 
 Generate the workflow:
 
-    dawg -generate
+    dawg -config mydawg.json -generate
 
 Install the workflow:
 
