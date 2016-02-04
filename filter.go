@@ -1,6 +1,7 @@
 package dawg
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -29,6 +30,7 @@ func Filter(c Config, svc, pat string) (AlfredOutput, error) {
 			Title:        shortcut,
 			Arg:          unquotedURL,
 			Pos:          matchPos,
+			Icon:         fmt.Sprintf("./%s.png", svc),
 		})
 	}
 	sort.Sort(alfredOut)

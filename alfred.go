@@ -46,6 +46,7 @@ type AlfredOutputItem struct {
 	UID          string `xml:"uid,attr"`
 	Autocomplete string `xml:"autocomplete,attr"`
 	Title        string `xml:"title"`
+	Icon         string `xml:"icon"`
 	Arg          string `xml:"arg"`
 	Pos          int    `xml:"-"`
 }

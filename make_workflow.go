@@ -11,7 +11,7 @@ import (
 	"github.com/kardianos/osext"
 )
 
-func MakeWorkflowZIP(plist []byte, icons map[string][]byte) (*bytes.Buffer, error) {
+func MakeWorkflowZIP(plist []byte, icons []ServiceIcon) (*bytes.Buffer, error) {
 	fname, err := osext.Executable()
 	if err != nil {
 		return nil, err
@@ -35,10 +35,17 @@ func MakeWorkflowZIP(plist []byte, icons map[string][]byte) (*bytes.Buffer, erro
 		{"dawg", dawgFile},
 	}
 
-	for guid, data := range icons {
+	for _, icon := range icons {
+		// Workflow objects
 		files = append(files, File{
-			fmt.Sprintf("%s.png", guid),
-			bytes.NewReader(data),
+			fmt.Sprintf("%s.png", icon.GUID),
+			bytes.NewReader(icon.Data),
+		})
+
+		// XML results
+		files = append(files, File{
+			fmt.Sprintf("%s.png", icon.Service),
+			bytes.NewReader(icon.Data),
 		})
 	}
 
