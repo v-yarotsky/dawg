@@ -45,9 +45,13 @@ func printAlfredXML(c dawg.Config, service, pattern string) error {
 
 func makeAlfredWorkflow(c dawg.Config) error {
 	plist := dawg.MakeWorkflowPList(c)
+	icons, err := dawg.DownloadServiceIcons(c)
+	if err != nil {
+		return fmt.Errorf("could not download service icons: %v", err)
+	}
 	out, _ := plist.PListWithHeader()
 
-	zipfile, err := dawg.MakeWorkflowZIP(out)
+	zipfile, err := dawg.MakeWorkflowZIP(out, icons)
 	if err != nil {
 		return fmt.Errorf("could not make a workflow zip file: %v", err)
 	}

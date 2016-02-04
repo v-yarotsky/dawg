@@ -3,7 +3,7 @@ package dawg
 import (
 	"archive/zip"
 	"bytes"
-	"crypto/rand"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -11,7 +11,7 @@ import (
 	"github.com/kardianos/osext"
 )
 
-func MakeWorkflowZIP(plist []byte) (*bytes.Buffer, error) {
+func MakeWorkflowZIP(plist []byte, icons map[string][]byte) (*bytes.Buffer, error) {
 	fname, err := osext.Executable()
 	if err != nil {
 		return nil, err
@@ -23,12 +23,23 @@ func MakeWorkflowZIP(plist []byte) (*bytes.Buffer, error) {
 	dawgFile, err := os.Open(fname)
 	defer dawgFile.Close()
 
-	files := []struct {
+	iconReader, _ := gzip.NewReader(bytes.NewReader(iconPNG))
+
+	type File struct {
 		Name string
 		Body io.Reader
-	}{
+	}
+	files := []File{
 		{"info.plist", bytes.NewReader(plist)},
+		{"icon.png", iconReader},
 		{"dawg", dawgFile},
+	}
+
+	for guid, data := range icons {
+		files = append(files, File{
+			fmt.Sprintf("%s.png", guid),
+			bytes.NewReader(data),
+		})
 	}
 
 	for _, file := range files {
@@ -51,7 +62,6 @@ func MakeWorkflowZIP(plist []byte) (*bytes.Buffer, error) {
 
 func MakeWorkflowPList(c Config) PList {
 	objects := make(PArray, 0, len(c)+1)
-	scriptFilterGUIDs := make([]string, 0, len(c))
 	connections := make(PDict, len(c))
 	uidata := make(PDict, len(c)+1)
 
@@ -71,9 +81,9 @@ func MakeWorkflowPList(c Config) PList {
 		"ypos": PReal(10),
 	}
 
-	ypos := 130
+	ypos := 10
 	for service, serviceConfig := range c {
-		guid := GUID()
+		guid := serviceConfig.GUID
 		obj := PDict{
 			"config": PDict{
 				"argumenttype":     PInteger(1),
@@ -92,7 +102,6 @@ func MakeWorkflowPList(c Config) PList {
 			"version": PInteger(0),
 		}
 		objects = append(objects, obj)
-		scriptFilterGUIDs = append(scriptFilterGUIDs, guid)
 
 		connections[guid] = PArray{
 			PDict{
@@ -122,15 +131,4 @@ func MakeWorkflowPList(c Config) PList {
 		"webaddress":  PString("https://github.com/v-yarotsky/dawg"),
 	}
 	return plist
-}
-
-func GUID() string {
-	u := make([]byte, 16)
-	_, err := rand.Read(u)
-	if err != nil {
-		panic(err)
-	}
-	u[6] = (u[6] & 0x0f) | 0x40 // Version 4
-	u[8] = (u[8] & 0x3f) | 0x80 // Variant is 10
-	return fmt.Sprintf("%X-%X-%X-%X-%X", u[0:4], u[4:6], u[6:8], u[8:10], u[10:])
 }
