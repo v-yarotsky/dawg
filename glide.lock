@@ -1,0 +1,8 @@
+hash: 4dedcd5ef6cfb193e79d96c0fcb659110a92c5f4ea58c56e5d5c01228018f66b
+updated: 2016-02-04T09:29:43.318754018-08:00
+imports:
+- name: github.com/jtacoma/uritemplates
+  version: 802b8e24dbf0f556badb3a1401a49f6bfda80ca6
+- name: github.com/kardianos/osext
+  version: 29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc
+devImports: []

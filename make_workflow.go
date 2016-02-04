@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
+
+	"github.com/kardianos/osext"
 )
 
 func MakeWorkflowZIP(plist []byte) (*bytes.Buffer, error) {
-	fname, err := filepath.Abs(os.Args[0])
+	fname, err := osext.Executable()
 	if err != nil {
 		return nil, err
 	}
