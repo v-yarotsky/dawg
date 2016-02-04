@@ -11,15 +11,17 @@ import (
 )
 
 func main() {
-	service := flag.String("s", "", "Service name")
+	configPath := flag.String("config", "dawg.json", "Path to config")
+	service := flag.String("service", "", "Service name")
 	makeWorkflow := flag.Bool("generate", false, "Generate Alfred Workflow")
 	flag.Parse()
 
-	c := dawg.MustReadConfig()
+	c, err := dawg.ReadConfig(*configPath)
+	handleError(err)
 
 	switch true {
 	case *makeWorkflow:
-		handleError(makeAlfredWorkflow(c))
+		handleError(makeAlfredWorkflow(*configPath, c))
 	case *service != "":
 		pattern := flag.Arg(0)
 		handleError(printAlfredXML(c, *service, pattern))
@@ -43,7 +45,7 @@ func printAlfredXML(c dawg.Config, service, pattern string) error {
 	return nil
 }
 
-func makeAlfredWorkflow(c dawg.Config) error {
+func makeAlfredWorkflow(embeddableConfigPath string, c dawg.Config) error {
 	plist := dawg.MakeWorkflowPList(c)
 	icons, err := dawg.DownloadServiceIcons(c)
 	if err != nil {
@@ -51,7 +53,7 @@ func makeAlfredWorkflow(c dawg.Config) error {
 	}
 	out, _ := plist.PListWithHeader()
 
-	zipfile, err := dawg.MakeWorkflowZIP(out, icons)
+	zipfile, err := dawg.MakeWorkflowZIP(embeddableConfigPath, out, icons)
 	if err != nil {
 		return fmt.Errorf("could not make a workflow zip file: %v", err)
 	}

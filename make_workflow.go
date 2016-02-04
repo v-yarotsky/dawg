@@ -11,17 +11,22 @@ import (
 	"github.com/kardianos/osext"
 )
 
-func MakeWorkflowZIP(plist []byte, icons []ServiceIcon) (*bytes.Buffer, error) {
+func MakeWorkflowZIP(configPath string, plist []byte, icons []ServiceIcon) (*bytes.Buffer, error) {
 	fname, err := osext.Executable()
 	if err != nil {
 		return nil, err
 	}
+	dawgFile, err := os.Open(fname)
+	defer dawgFile.Close()
+
+	configFile, err := os.Open(configPath)
+	if err != nil {
+		return nil, err
+	}
+	defer configFile.Close()
 
 	buf := new(bytes.Buffer)
 	w := zip.NewWriter(buf)
-
-	dawgFile, err := os.Open(fname)
-	defer dawgFile.Close()
 
 	iconReader, _ := gzip.NewReader(bytes.NewReader(iconPNG))
 
@@ -33,6 +38,7 @@ func MakeWorkflowZIP(plist []byte, icons []ServiceIcon) (*bytes.Buffer, error) {
 		{"info.plist", bytes.NewReader(plist)},
 		{"icon.png", iconReader},
 		{"dawg", dawgFile},
+		{"dawg.json", configFile},
 	}
 
 	for _, icon := range icons {
@@ -99,7 +105,7 @@ func MakeWorkflowPList(c Config) PList {
 				"queuedelaycustom": PBool(true),
 				"queuedelaymode":   PInteger(0),
 				"queuemode":        PInteger(1),
-				"script":           PString(fmt.Sprintf("chmod +x ./dawg && ./dawg -s %s \"{query}\"", service)),
+				"script":           PString(fmt.Sprintf("chmod +x ./dawg && ./dawg -service %s \"{query}\"", service)),
 				"title":            PString(service),
 				"type":             PInteger(0),
 				"withspace":        PBool(true),

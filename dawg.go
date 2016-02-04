@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/user"
-	"strings"
 
 	"github.com/jtacoma/uritemplates"
 )
@@ -37,7 +35,7 @@ func (t *URITemplate) UnmarshalJSON(b []byte) error {
 type Config map[string]*ServiceConfig
 
 func (c Config) GetService(service string) (ServiceConfig, error) {
-	if s, ok := map[string]*ServiceConfig(c)[service]; ok {
+	if s, ok := c[service]; ok {
 		return *s, nil
 	} else {
 		return ServiceConfig{}, fmt.Errorf("service '%s' not found", service)
@@ -66,26 +64,24 @@ func (s ServiceConfig) GetURL(shortcut string) (string, error) {
 	}
 }
 
-func MustReadConfig() Config {
-	usr, _ := user.Current()
-	dir := usr.HomeDir
-	file, err := os.Open(strings.Join([]string{dir, ".dawg.json"}, "/"))
+func ReadConfig(path string) (Config, error) {
+	file, err := os.Open(path)
 	if err != nil {
-		panic(err)
+		return Config{}, fmt.Errorf("could not open config file: %s", err)
 	}
 	defer file.Close()
 
 	var cfg Config
 	dec := json.NewDecoder(file)
 	if err := dec.Decode(&cfg); err != nil {
-		panic(err)
+		return Config{}, fmt.Errorf("could not parse config file: %s", err)
 	}
 
 	for svc, _ := range cfg {
 		cfg[svc].GUID = GUID() // randomly assign guids for alfred workflow objects
 	}
 
-	return cfg
+	return cfg, nil
 }
 
 func GUID() string {
