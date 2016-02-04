@@ -1,21 +1,23 @@
 DAWG
 ====
 
-Fancy link expander for use with [Alfred](https://www.alfredapp.com/).
+Fancy link expander workflow generator for [Alfred](https://www.alfredapp.com/).
 
 ## Usage
 
-Put a json config with URL templates and substitutions:
+Put a json config with URL templates and substitutions to `~/.dawg.json`:
 
     {
-      "datadog": {
+      "www.datadoghq.com": {
+        "keyword": "dog",
         "template": "https://app.datadoghq.com/screen/{id}",
         "substitutions": {
           "mydash":    { "id": "100" },
           "otherdash": { "id": "101" }
         }
       },
-      "onelogin": {
+      "www.onelogin.com": {
+        "keyword": "ol",
         "template": "https://app.onelogin.com/client/apps/select/{id}",
         "substitutions": {
           "datadog": { "id": "1000" },
@@ -24,44 +26,17 @@ Put a json config with URL templates and substitutions:
       }
     }
 
-When you run this:
+Generate the workflow:
 
-    dawg -s datadog
+    dawg -generate
 
-You will get this:
+Install the workflow:
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <items>
-      <item uid="dawg:mydash" autocomplete="mydash">
-        <title>mydash</title>
-        <arg>https://app.datadoghq.com/screen/100</arg>
-      </item>
-      <item uid="dawg:otherdash" autocomplete="otherdash">
-        <title>otherdash</title>
-        <arg>https://app.datadoghq.com/screen/101</arg>
-      </item>
-    </items>
-
-And when you run this:
-
-    dawg -s datadog my
-
-You will get this:
-
-    <?xml version="1.0" encoding="UTF-8"?>
-    <items>
-      <item uid="dawg:mydash" autocomplete="mydash">
-        <title>mydash</title>
-        <arg>https://app.datadoghq.com/screen/100</arg>
-      </item>
-    </items>
+    open DAWG.alfredworkflow
 
 ## Screenshots!
 
-Here's how a simple "script filter + open URL" Alfred workflow looks like:
-
 ![Alfred](https://github.com/v-yarotsky/dawg/blob/master/doc/screenshot.png?raw=true)
-![Alfred Workflow Setup](https://github.com/v-yarotsky/dawg/blob/master/doc/workflow.png?raw=true)
 
 ## License
 
