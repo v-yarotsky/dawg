@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	configPath := flag.String("config", "dawg.json", "Path to config")
+	configPath := flag.String("config", "dawg.json", "Path to config `FILE`")
 	service := flag.String("service", "", "Service name")
 	makeWorkflow := flag.Bool("generate", false, "Generate Alfred Workflow")
 	flag.Parse()

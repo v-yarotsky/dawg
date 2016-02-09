@@ -25,7 +25,7 @@ func Filter(c Config, svc, pat string) (AlfredOutput, error) {
 		}
 		unquotedURL, _ := strconv.Unquote(url)
 		alfredOut = append(alfredOut, AlfredOutputItem{
-			UID:          "dawg:" + shortcut,
+			UID:          fmt.Sprintf("dawg:%s:%s", svc, shortcut),
 			Autocomplete: shortcut,
 			Title:        shortcut,
 			Arg:          unquotedURL,
