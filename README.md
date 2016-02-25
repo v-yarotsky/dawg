@@ -5,34 +5,10 @@ Fancy link expander workflow generator for [Alfred](https://www.alfredapp.com/).
 
 ## Usage
 
-Make a json config with URL templates and substitutions:
-
-    {
-      "www.datadoghq.com": {
-        "keyword": "dog",
-        "template": "https://app.datadoghq.com/screen/{id}",
-        "substitutions": {
-          "mydash":    { "id": "100" },
-          "otherdash": { "id": "101" }
-        }
-      },
-      "www.onelogin.com": {
-        "keyword": "ol",
-        "template": "https://app.onelogin.com/client/apps/select/{id}",
-        "substitutions": {
-          "datadog": { "id": "1000" },
-          "google":  { "id": "1001" }
-        }
-      }
-    }
-
-Generate the workflow:
-
-    dawg -config mydawg.json -generate
-
-Install the workflow:
-
-    open DAWG.alfredworkflow
+1. Install the workflow
+2. In Alfred, run `dawg edit`
+3. Edit the configuration file, save and exit the editor
+4. Enjoy thoroughly!
 
 ## Screenshots!
 
