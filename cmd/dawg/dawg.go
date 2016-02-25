@@ -3,25 +3,25 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"os"
 
 	"github.com/v-yarotsky/dawg"
 )
 
+const configPath = "./dawg.json"
+
 func main() {
-	configPath := flag.String("config", "dawg.json", "Path to config `FILE`")
 	service := flag.String("service", "", "Service name")
-	makeWorkflow := flag.Bool("generate", false, "Generate Alfred Workflow")
+	updateWorkflow := flag.Bool("update", false, "Update the Alfred Workflow")
 	flag.Parse()
 
-	c, err := dawg.ReadConfig(*configPath)
+	c, err := dawg.ReadConfig(configPath)
 	handleError(err)
 
 	switch true {
-	case *makeWorkflow:
-		handleError(makeAlfredWorkflow(*configPath, c))
+	case *updateWorkflow:
+		handleError(updateAlfredWorkflow(c))
 	case *service != "":
 		pattern := flag.Arg(0)
 		handleError(printAlfredXML(c, *service, pattern))
@@ -45,32 +45,16 @@ func printAlfredXML(c dawg.Config, service, pattern string) error {
 	return nil
 }
 
-func makeAlfredWorkflow(embeddableConfigPath string, c dawg.Config) error {
+func updateAlfredWorkflow(c dawg.Config) error {
 	plist := dawg.MakeWorkflowPList(c)
 	icons, err := dawg.DownloadServiceIcons(c)
 	if err != nil {
 		return fmt.Errorf("could not download service icons: %v", err)
 	}
-	out, _ := plist.PListWithHeader()
+	plistData, _ := plist.PListWithHeader()
 
-	zipfile, err := dawg.MakeWorkflowZIP(embeddableConfigPath, out, icons)
-	if err != nil {
-		return fmt.Errorf("could not make a workflow zip file: %v", err)
-	}
-
-	f, err := os.Create("DAWG.alfredworkflow")
-	if err != nil {
-		return fmt.Errorf("could not open workflow zip file for writing: %v", err)
-	}
-
-	_, err = io.Copy(f, zipfile)
-	if err != nil {
-		return fmt.Errorf("could not write to the workflow zip file: %v", err)
-	}
-
-	err = f.Close()
-	if err != nil {
-		return fmt.Errorf("could not close the workflow zip file: %v", err)
+	if err = dawg.SelfUpdate(plistData, icons); err != nil {
+		return fmt.Errorf("could not self update: %v", err)
 	}
 	return nil
 }
