@@ -3,7 +3,7 @@
 <plist version="1.0">
   <dict>
     <key>bundleid</key>
-    <string></string>
+    <string>com.vyarotsky.alfred.dawg</string>
     <key>category</key>
     <string>Productivity</string>
     <key>connections</key>
@@ -43,7 +43,7 @@
       </array>
     </dict>
     <key>description</key>
-    <string>Serices at your fingertips :)</string>
+    <string>Services at your fingertips :)</string>
     <key>name</key>
     <string>DAWG</string>
     <key>readme</key>

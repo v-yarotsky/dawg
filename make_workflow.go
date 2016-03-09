@@ -178,11 +178,11 @@ echo 'Updated!'`),
 	}
 
 	plist := PList{
-		"bundleid":    PString(""),
+		"bundleid":    PString("com.vyarotsky.alfred.dawg"),
 		"category":    PString("Productivity"),
 		"connections": connections,
 		"createdby":   PString("Vlad Yarotsky"),
-		"description": PString("Serices at your fingertips :)"),
+		"description": PString("Services at your fingertips :)"),
 		"disabled":    PBool(false),
 		"name":        PString("DAWG"),
 		"objects":     objects,
