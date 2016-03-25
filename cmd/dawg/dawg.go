@@ -9,17 +9,26 @@ import (
 	"github.com/v-yarotsky/dawg"
 )
 
-const configPath = "./dawg.json"
-
 func main() {
 	service := flag.String("service", "", "Service name")
 	updateWorkflow := flag.Bool("update", false, "Update the Alfred Workflow")
+	showConfigPath := flag.Bool("config", false, "Output path to DAWG config and exit")
 	flag.Parse()
 
+	settingsDir, err := dawg.SettingsDirPath()
+	handleError(err)
+	if err := os.MkdirAll(settingsDir, 0755); err != nil {
+		handleError(fmt.Errorf("could not create synced preferences directory: %s", err))
+	}
+
+	configPath, err := dawg.SettingsFilePath()
+	handleError(err)
 	c, err := dawg.ReadConfig(configPath)
 	handleError(err)
 
 	switch true {
+	case *showConfigPath:
+		fmt.Println(configPath)
 	case *updateWorkflow:
 		handleError(updateAlfredWorkflow(c))
 	case *service != "":

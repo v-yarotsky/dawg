@@ -1,9 +1,0 @@
-{
-  "www.github.com": {
-    "keyword": "dawg github",
-    "template": "https://github.com/{org}/{repo}",
-    "substitutions": {
-      "dawg": { "org": "v-yarotsky", "repo": "dawg" }
-    }
-  }
-}

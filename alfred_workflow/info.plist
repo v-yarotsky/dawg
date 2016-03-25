@@ -83,7 +83,7 @@
           <key>escaping</key>
           <integer>102</integer>
           <key>script</key>
-          <string>set -e&#xA;trap &#39;echo Failed to update DAWG. Make sure there are no errors in config&#39; ERR&#xA;open -n -W ./dawg.json&#xA;chmod +x ./dawg&#xA;./dawg -update 2&gt;&amp;1&#xA;echo &#39;Updated!&#39;</string>
+          <string>set -e&#xA;trap &#39;echo Failed to update DAWG. Make sure there are no errors in config&#39; ERR&#xA;chmod +x ./dawg&#xA;open -n -W "$(./dawg -config)"&#xA;./dawg -update 2&gt;&amp;1&#xA;echo &#39;Updated!&#39;</string>
         </dict>
         <key>type</key>
         <string>alfred.workflow.action.script</string>
