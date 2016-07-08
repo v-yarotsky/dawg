@@ -3,6 +3,10 @@ DAWG
 
 Fancy link expander workflow generator for [Alfred](https://www.alfredapp.com/).
 
+## Installation
+
+[Download latest](https://github.com/v-yarotsky/dawg/releases/latest)
+
 ## Usage
 
 1. Install the workflow
