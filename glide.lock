@@ -1,8 +1,15 @@
-hash: 4dedcd5ef6cfb193e79d96c0fcb659110a92c5f4ea58c56e5d5c01228018f66b
-updated: 2016-02-04T09:29:43.318754018-08:00
+hash: 58191f468000360312ee1568b143906b78cd81a5247f6e4e8005383ef212d764
+updated: 2019-03-18T12:03:54.090831-07:00
 imports:
 - name: github.com/jtacoma/uritemplates
   version: 802b8e24dbf0f556badb3a1401a49f6bfda80ca6
 - name: github.com/kardianos/osext
   version: 29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc
-devImports: []
+- name: github.com/nfnt/resize
+  version: 83c6a9932646f83e3267f353373d47347b6036b2
+- name: golang.org/x/image
+  version: 0694c2d4d067f97ebef574d63a763ee8ab559da7
+  subpackages:
+  - draw
+  - math/f64
+testImports: []

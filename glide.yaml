@@ -2,3 +2,5 @@ package: main
 import:
 - package: github.com/jtacoma/uritemplates
 - package: github.com/kardianos/osext
+- package: github.com/nfnt/resize
+- package: golang.org/x/image/draw

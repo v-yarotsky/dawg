@@ -60,7 +60,7 @@ func generateLogoThumbnail(m image.Image) (image.Image, error) {
 }
 
 func DownloadServiceIcons(c Config) ([]ServiceIcon, error) {
-	tpl, _ := uritemplates.Parse("https://logo.clearbit.com/{domain}?size=128&format=png")
+	tpl, _ := uritemplates.Parse("https://logo.clearbit.com/{domain}?size=128")
 	nIcons := len(c)
 	ic := make(chan ServiceIcon)
 	ec := make(chan error)
