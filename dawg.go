@@ -4,20 +4,29 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/jtacoma/uritemplates"
 )
 
-type URITemplate uritemplates.UriTemplate
+type URITemplate struct {
+	*uritemplates.UriTemplate
+	Raw string
+}
 
 func (t *URITemplate) UnmarshalJSON(b []byte) error {
-	tpl, err := uritemplates.Parse(string(b))
+	t.Raw = string(b)
+	tpl, err := uritemplates.Parse(t.Raw)
 	if err != nil {
 		return err
 	}
-	*t = URITemplate((*tpl))
+	t.UriTemplate = tpl
 	return nil
+}
+
+func (t *URITemplate) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("%q", t.Raw)), nil
 }
 
 //
@@ -56,8 +65,7 @@ func (s ServiceConfig) GetURL(shortcut string) (string, error) {
 		return "", fmt.Errorf("shortcut '%s' not found", shortcut)
 	}
 
-	casted := uritemplates.UriTemplate(s.Template)
-	if expanded, err := casted.Expand(shortcutVars); err != nil {
+	if expanded, err := s.Template.Expand(shortcutVars); err != nil {
 		return "", fmt.Errorf("could not expand URL template: %v", err)
 	} else {
 		return expanded, nil
@@ -66,6 +74,15 @@ func (s ServiceConfig) GetURL(shortcut string) (string, error) {
 
 func ReadConfig(path string) (Config, error) {
 	file, err := os.Open(path)
+
+	if os.IsNotExist(err) {
+		err = putSampleConfig(path)
+		if err != nil {
+			return Config{}, fmt.Errorf("could not create sample config file: %s", err)
+		}
+		file, err = os.Open(path)
+	}
+
 	if err != nil {
 		return Config{}, fmt.Errorf("could not open config file: %s", err)
 	}
@@ -82,6 +99,11 @@ func ReadConfig(path string) (Config, error) {
 	}
 
 	return cfg, nil
+}
+
+func putSampleConfig(path string) error {
+	data, _ := json.MarshalIndent(sampleConfig(), "", "  ")
+	return ioutil.WriteFile(path, data, 0644)
 }
 
 func GUID() string {

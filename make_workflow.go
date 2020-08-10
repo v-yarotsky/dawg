@@ -76,8 +76,8 @@ func MakeWorkflowPList(c Config) PList {
 			"escaping":     PInteger(102),
 			"script": PString(`set -e
 trap 'echo Failed to update DAWG. Make sure there are no errors in config' ERR
-open -n -W ./dawg.json
 chmod +x ./dawg
+open -n -W "$(./dawg -config)"
 ./dawg -update 2>&1
 echo 'Updated!'`),
 			"type": PInteger(0),
@@ -178,7 +178,7 @@ echo 'Updated!'`),
 	}
 
 	plist := PList{
-		"bundleid":    PString("com.vyarotsky.alfred.dawg"),
+		"bundleid":    PString(BundleID),
 		"category":    PString("Productivity"),
 		"connections": connections,
 		"createdby":   PString("Vlad Yarotsky"),
