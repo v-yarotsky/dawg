@@ -32,21 +32,10 @@ func (a AlfredOutput) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	return nil
 }
 
-func (s AlfredOutput) Len() int {
-	return len(s)
-}
-func (s AlfredOutput) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-func (s AlfredOutput) Less(i, j int) bool {
-	return s[i].Pos < s[j].Pos
-}
-
 type AlfredOutputItem struct {
 	UID          string `xml:"uid,attr"`
 	Autocomplete string `xml:"autocomplete,attr"`
 	Title        string `xml:"title"`
 	Icon         string `xml:"icon"`
 	Arg          string `xml:"arg"`
-	Pos          int    `xml:"-"`
 }

@@ -2,9 +2,7 @@ package dawg
 
 import (
 	"fmt"
-	"sort"
 	"strconv"
-	"strings"
 )
 
 func Filter(c Config, svc, pat string) (AlfredOutput, error) {
@@ -14,11 +12,9 @@ func Filter(c Config, svc, pat string) (AlfredOutput, error) {
 	}
 
 	alfredOut := make(AlfredOutput, 0, 10)
-	for shortcut, _ := range serviceConfig.Substitutions {
-		matchPos := strings.Index(shortcut, pat)
-		if matchPos == -1 {
-			continue
-		}
+
+	filteredShortcuts := FilterChoices(serviceConfig.Shortcuts(), pat)
+	for _, shortcut := range filteredShortcuts {
 		url, err := serviceConfig.GetURL(shortcut)
 		if err != nil {
 			return AlfredOutput{}, err
@@ -29,10 +25,8 @@ func Filter(c Config, svc, pat string) (AlfredOutput, error) {
 			Autocomplete: shortcut,
 			Title:        shortcut,
 			Arg:          unquotedURL,
-			Pos:          matchPos,
 			Icon:         fmt.Sprintf("./%s.png", svc),
 		})
 	}
-	sort.Sort(alfredOut)
 	return alfredOut, nil
 }

@@ -49,7 +49,7 @@ type ServiceConfig struct {
 	Substitutions map[string]map[string]interface{} `json:"substitutions"`
 }
 
-func (s ServiceConfig) GetURL(shortcut string) (string, error) {
+func (s *ServiceConfig) GetURL(shortcut string) (string, error) {
 	var shortcutVars map[string]interface{}
 	var ok bool
 	if shortcutVars, ok = s.Substitutions[shortcut]; !ok {
@@ -62,6 +62,14 @@ func (s ServiceConfig) GetURL(shortcut string) (string, error) {
 	} else {
 		return expanded, nil
 	}
+}
+
+func (s *ServiceConfig) Shortcuts() []string {
+	shortcuts := make([]string, 0, len(s.Substitutions))
+	for c, _ := range s.Substitutions {
+		shortcuts = append(shortcuts, c)
+	}
+	return shortcuts
 }
 
 func ReadConfig(path string) (Config, error) {
